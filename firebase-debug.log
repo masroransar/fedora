@@ -1,0 +1,26 @@
+[debug] [2026-03-26T22:38:40.868Z] ----------------------------------------------------------------------
+[debug] [2026-03-26T22:38:40.879Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\masro\AppData\Roaming\npm\node_modules\firebase-tools\lib\bin\firebase.js init
+[debug] [2026-03-26T22:38:40.879Z] CLI Version:   15.11.0
+[debug] [2026-03-26T22:38:40.879Z] Platform:      win32
+[debug] [2026-03-26T22:38:40.879Z] Node Version:  v25.8.1
+[debug] [2026-03-26T22:38:40.879Z] Time:          Fri Mar 27 2026 01:38:40 GMT+0300 (Arabian Standard Time)
+[debug] [2026-03-26T22:38:40.879Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2026-03-26T22:38:40.882Z] >>> [apiv2][query] GET https://firebase-public.firebaseio.com/cli.json [none]
+[info] 
+     ######## #### ########  ######## ########     ###     ######  ########
+     ##        ##  ##     ## ##       ##     ##  ##   ##  ##       ##
+     ######    ##  ########  ######   ########  #########  ######  ######
+     ##        ##  ##    ##  ##       ##     ## ##     ##       ## ##
+     ##       #### ##     ## ######## ########  ##     ##  ######  ########
+
+You're about to initialize a Firebase project in this directory:
+
+  C:\xampp\htdocs\fedora\backend
+
+Before we get started, keep in mind:
+
+  * You are currently outside your home directory
+
+[debug] [2026-03-26T22:38:43.009Z] <<< [apiv2][status] GET https://firebase-public.firebaseio.com/cli.json 200
+[debug] [2026-03-26T22:38:43.009Z] <<< [apiv2][body] GET https://firebase-public.firebaseio.com/cli.json {"cloudBuildErrorAfter":1594252800000,"cloudBuildWarnAfter":1590019200000,"defaultNode10After":1594252800000,"minVersion":"3.0.5","node8DeploysDisabledAfter":1613390400000,"node8RuntimeDisabledAfter":1615809600000,"node8WarnAfter":1600128000000}

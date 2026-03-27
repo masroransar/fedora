@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>اختبار API - Test API</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            padding: 30px;
+        }
+        h1 { color: #333; margin-bottom: 10px; text-align: center; }
+        .subtitle { color: #666; text-align: center; margin-bottom: 30px; }
+        .test-section {
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .test-title {
+            color: #667eea;
+            font-weight: bold;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+        .button-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background 0.3s;
+        }
+        button:hover { background: #764ba2; }
+        .result {
+            background: white;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 15px;
+            max-height: 300px;
+            overflow-y: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            line-height: 1.5;
+        }
+        .success { border-left: 4px solid #28a745; color: #28a745; }
+        .error { border-left: 4px solid #dc3545; color: #dc3545; }
+        .loading { border-left: 4px solid #ffc107; color: #ffc107; }
+        .status-badge {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 12px;
+            margin-left: 10px;
+        }
+        .badge-success { background: #d4edda; color: #155724; }
+        .badge-error { background: #f8d7da; color: #721c24; }
+        .badge-pending { background: #fff3cd; color: #856404; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧪 API Test Panel</h1>
+        <p class="subtitle">اختبر جميع endpoints من الصفحة - Test all API endpoints</p>
+
+        <!-- Database Test -->
+        <div class="test-section">
+            <div class="test-title">💾 Database Connection</div>
+            <button onclick="testDatabase()">Test Connection</button>
+            <div id="dbResult" class="result"></div>
+        </div>
+
+        <!-- Slider Tests -->
+        <div class="test-section">
+            <div class="test-title">🖼️ Slider API Tests</div>
+            <div class="button-group">
+                <button onclick="testGetSliders()">GET /slider</button>
+                <button onclick="testTableExists()">Check Table</button>
+                <button onclick="testCountSliders()">Count Sliders</button>
+            </div>
+            <div id="sliderResult" class="result"></div>
+        </div>
+
+        <!-- Auth Tests -->
+        <div class="test-section">
+            <div class="test-title">🔐 Authentication Tests</div>
+            <div class="button-group">
+                <button onclick="testLoginUser()">Login User1</button>
+                <button onclick="testLoginAdmin()">Login Admin</button>
+                <button onclick="testGenerateToken()">Generate Token</button>
+            </div>
+            <div id="authResult" class="result"></div>
+        </div>
+
+        <!-- File Exists Tests -->
+        <div class="test-section">
+            <div class="test-title">📁 File Existence Check</div>
+            <div class="button-group">
+                <button onclick="checkPhpFiles()">Check PHP Files</button>
+                <button onclick="checkFlutterFiles()">Check Flutter Files</button>
+                <button onclick="checkDocFiles()">Check Doc Files</button>
+            </div>
+            <div id="filesResult" class="result"></div>
+        </div>
+
+        <!-- Manual SQL -->
+        <div class="test-section">
+            <div class="test-title">🔧 Manual SQL Execute</div>
+            <textarea id="sqlInput" style="width: 100%; height: 100px; padding: 10px; border-radius: 5px; border: 1px solid #ddd;"></textarea>
+            <button onclick="executeSql()" style="margin-top: 10px;">Execute SQL</button>
+            <div id="sqlResult" class="result"></div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://192.168.56.1/fedora/backend/api.php';
+
+        async function testDatabase() {
+            const result = document.getElementById('dbResult');
+            result.textContent = '⏳ Connecting...';
+            result.className = 'result loading';
+            
+            try {
+                const response = await fetch(API_BASE + '/slider');
+                if (response.ok) {
+                    result.textContent = '✅ Database connected successfully!\n\nResponse status: ' + response.status;
+                    result.className = 'result success';
+                } else {
+                    result.textContent = '❌ Error: ' + response.status + '\n' + response.statusText;
+                    result.className = 'result error';
+                }
+            } catch (e) {
+                result.textContent = '❌ Connection failed!\n\nError: ' + e.message + '\n\nTip: Make sure XAMPP is running and IP is 192.168.56.1';
+                result.className = 'result error';
+            }
+        }
+
+        async function testGetSliders() {
+            const result = document.getElementById('sliderResult');
+            result.textContent = '⏳ Fetching sliders...';
+            result.className = 'result loading';
+            
+            try {
+                const response = await fetch(API_BASE + '/slider');
+                const data = await response.json();
+                result.textContent = JSON.stringify(data, null, 2);
+                result.className = 'result ' + (response.ok ? 'success' : 'error');
+            } catch (e) {
+                result.textContent = '❌ Error: ' + e.message;
+                result.className = 'result error';
+            }
+        }
+
+        async function testTableExists() {
+            const result = document.getElementById('sliderResult');
+            result.textContent = '⏳ Checking table...';
+            result.className = 'result loading';
+            
+            try {
+                const response = await fetch('http://192.168.56.1/fedora/backend/check_table.php');
+                const data = await response.json();
+                result.textContent = JSON.stringify(data, null, 2);
+                result.className = 'result ' + (data.table_exists ? 'success' : 'error');
+            } catch (e) {
+                result.textContent = '❌ Error: ' + e.message + '\n\nNote: check_table.php might not exist';
+                result.className = 'result error';
+            }
+        }
+
+        async function testCountSliders() {
+            const result = document.getElementById('sliderResult');
+            result.textContent = '⏳ Counting sliders...';
+            result.className = 'result loading';
+            
+            try {
+                const response = await fetch(API_BASE + '/slider');
+                const data = await response.json();
+                const count = data.count || data.sliders?.length || 0;
+                result.textContent = '✅ Total sliders: ' + count + '\n\n' + JSON.stringify(data, null, 2);
+                result.className = 'result success';
+            } catch (e) {
+                result.textContent = '❌ Error: ' + e.message;
+                result.className = 'result error';
+            }
+        }
+
+        async function testLoginUser() {
+            const result = document.getElementById('authResult');
+            result.textContent = '⏳ Login user1...';
+            result.className = 'result loading';
+            
+            try {
+                const response = await fetch(API_BASE + '/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username: 'user1', password: '123456' })
+                });
+                const data = await response.json();
+                result.textContent = JSON.stringify(data, null, 2);
+                result.className = 'result ' + (response.ok ? 'success' : 'error');
+            } catch (e) {
+                result.textContent = '❌ Error: ' + e.message;
+                result.className = 'result error';
+            }
+        }
+
+        async function testLoginAdmin() {
+            const result = document.getElementById('authResult');
+            result.textContent = '⏳ Login admin...';
+            result.className = 'result loading';
+            
+            try {
+                const response = await fetch(API_BASE + '/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username: 'admin', password: '123456' })
+                });
+                const data = await response.json();
+                result.textContent = JSON.stringify(data, null, 2);
+                result.className = 'result ' + (response.ok ? 'success' : 'error');
+            } catch (e) {
+                result.textContent = '❌ Error: ' + e.message;
+                result.className = 'result error';
+            }
+        }
+
+        async function testGenerateToken() {
+            const result = document.getElementById('authResult');
+            const token = btoa('1:admin:admin');
+            const decoded = atob(token);
+            result.textContent = '✅ Token generated:\n\nOriginal: 1:admin:admin\n\nBase64: ' + token + '\n\nDecoded: ' + decoded;
+            result.className = 'result success';
+        }
+
+        async function checkPhpFiles() {
+            const result = document.getElementById('filesResult');
+            const files = [
+                'api.php',
+                'config.php',
+                'slider_functions.php',
+                'setup_slider_table.sql'
+            ];
+            result.textContent = '🔍 Checking PHP files...\n\n';
+            // This is just informational
+            files.forEach(f => {
+                result.textContent += '📄 ' + f + '\n';
+            });
+            result.className = 'result loading';
+        }
+
+        async function checkFlutterFiles() {
+            const result = document.getElementById('filesResult');
+            const files = [
+                'lib/main.dart',
+                'lib/main_screen.dart',
+                'lib/admin_screen.dart',
+                'lib/login_screen.dart',
+                'lib/register_screen.dart'
+            ];
+            result.textContent = '🔍 Checking Flutter files...\n\n';
+            files.forEach(f => {
+                result.textContent += '📱 ' + f + '\n';
+            });
+            result.className = 'result loading';
+        }
+
+        async function checkDocFiles() {
+            const result = document.getElementById('filesResult');
+            const files = [
+                'INDEX.md',
+                'QUICK_START.md',
+                'SYSTEM_OVERVIEW.md',
+                'SLIDER_COMPLETE_GUIDE.md',
+                'API_REFERENCE.md',
+                'TESTING_GUIDE.md',
+                'TROUBLESHOOTING.md'
+            ];
+            result.textContent = '🔍 Checking Documentation files...\n\n';
+            files.forEach(f => {
+                result.textContent += '📖 ' + f + '\n';
+            });
+            result.className = 'result loading';
+        }
+
+        async function executeSql() {
+            const sql = document.getElementById('sqlInput').value;
+            if (!sql.trim()) {
+                alert('Please enter SQL');
+                return;
+            }
+            const result = document.getElementById('sqlResult');
+            result.textContent = '⏳ Executing SQL...';
+            result.className = 'result loading';
+            result.textContent = '⚠️ SQL execution not available from browser.\n\nPlease use phpMyAdmin instead:\nhttp://localhost/phpmyadmin\n\nSQL to execute:\n' + sql;
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,9 @@
+# Enable rewriting
+RewriteEngine On
+
+# Allow direct access to files and folders that exist
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+
+# Rewrite all requests to api.php with the path as PATH_INFO
+RewriteRule ^(.*)$ api.php/$1 [L]

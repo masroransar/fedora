@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>اختبار الـ API - FEDORA</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f5f5f5;
+            padding: 20px;
+            direction: rtl;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+        }
+
+        h1 {
+            color: #1F3A93;
+            text-align: center;
+        }
+
+        .endpoint {
+            border: 1px solid #ddd;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+            background: #f9f9f9;
+        }
+
+        .endpoint h3 {
+            margin-top: 0;
+            color: #2E5090;
+        }
+
+        .endpoint pre {
+            background: #f0f0f0;
+            padding: 10px;
+            border-radius: 3px;
+            overflow-x: auto;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        button {
+            background: #1F3A93;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+
+        button:hover {
+            background: #162b6f;
+        }
+
+        .loading {
+            color: orange;
+        }
+
+        .success {
+            color: green;
+        }
+
+        .error {
+            color: red;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>اختبار الـ API - FEDORA</h1>
+
+        <div class="endpoint">
+            <h3>📺 القنوات</h3>
+            <button onclick="testEndpoint('channels')">اختبر</button>
+            <div id="channels" class="loading">جارِ التحميل...</div>
+        </div>
+
+        <div class="endpoint">
+            <h3>🎬 الأفلام</h3>
+            <button onclick="testEndpoint('movies')">اختبر</button>
+            <div id="movies" class="loading">جارِ التحميل...</div>
+        </div>
+
+        <div class="endpoint">
+            <h3>📽️ المسلسلات</h3>
+            <button onclick="testEndpoint('series')">اختبر</button>
+            <div id="series" class="loading">جارِ التحميل...</div>
+        </div>
+
+        <div class="endpoint">
+            <h3>📂 الفئات</h3>
+            <button onclick="testEndpoint('categories')">اختبر</button>
+            <div id="categories" class="loading">جارِ التحميل...</div>
+        </div>
+
+        <div class="endpoint">
+            <h3>🖼️ الصور المتحركة</h3>
+            <button onclick="testEndpoint('slider')">اختبر</button>
+            <div id="slider" class="loading">جارِ التحميل...</div>
+        </div>
+
+        <div class="endpoint">
+            <h3>🔗 روابط السوشيال</h3>
+            <button onclick="testEndpoint('social')">اختبر</button>
+            <div id="social" class="loading">جارِ التحميل...</div>
+        </div>
+
+        <div class="endpoint">
+            <h3>📋 القائمة الجانبية</h3>
+            <button onclick="testEndpoint('sidebar')">اختبر</button>
+            <div id="sidebar" class="loading">جارِ التحميل...</div>
+        </div>
+    </div>
+
+    <script>
+        async function testEndpoint(endpoint) {
+            const resultDiv = document.getElementById(endpoint);
+            resultDiv.innerHTML = '<span class="loading">جارِ التحميل...</span>';
+
+            try {
+                const response = await fetch(`api.php/${endpoint}`);
+                const data = await response.json();
+
+                let html = '<strong>✓ النتيجة:</strong><pre>';
+                html += JSON.stringify(data, null, 2);
+                html += '</pre>';
+
+                if (response.ok) {
+                    resultDiv.innerHTML = '<span class="success">' + html + '</span>';
+                } else {
+                    resultDiv.innerHTML = '<span class="error">' + html + '</span>';
+                }
+            } catch (error) {
+                resultDiv.innerHTML = '<span class="error">✗ خطأ: ' + error.message + '</span>';
+            }
+        }
+
+        // اختبر الجميع عند التحميل
+        window.addEventListener('load', () => {
+            testEndpoint('channels');
+            setTimeout(() => testEndpoint('movies'), 500);
+            setTimeout(() => testEndpoint('series'), 1000);
+            setTimeout(() => testEndpoint('categories'), 1500);
+            setTimeout(() => testEndpoint('slider'), 2000);
+            setTimeout(() => testEndpoint('social'), 2500);
+            setTimeout(() => testEndpoint('sidebar'), 3000);
+        });
+    </script>
+</body>
+
+</html>
